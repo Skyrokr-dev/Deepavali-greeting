@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#22071d">
+<title>Deepavali Wishes | Kishore & Keerti</title>
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;min-height:100dvh;color:#ffe9ac;
+ font-family:Georgia,serif;text-align:center;
+ background:radial-gradient(ellipse at 50% 35%,#78321e,#310c26 55%,#130514);
+ overflow-x:hidden
+}
+main{max-width:550px;margin:auto;padding:30px 22px 65px;position:relative;z-index:1}
+.ornament{font-size:28px;letter-spacing:12px;color:#f7bd4d}
+h1{font-size:clamp(38px,10vw,61px);line-height:1.1;margin:30px 0 12px;color:#ffd66b;text-shadow:0 0 25px #e88c35}
+.subtitle{font-size:19px;color:#fff0c6}
+.diya{font-size:100px;display:block;filter:drop-shadow(0 0 22px #ffad27);animation:glow 2s infinite alternate}
+@keyframes glow{to{filter:drop-shadow(0 0 45px #ffc146);transform:scale(1.06)}}
+button{border:1px solid #f8c56c;border-radius:35px;background:linear-gradient(135deg,#f9d079,#bb742c);color:#321221;padding:15px 27px;font-size:17px;font-weight:bold;cursor:pointer}
+#reveal{display:none;animation:appear 1.5s ease}
+@keyframes appear{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.telugu{font-family:serif;font-size:25px;line-height:1.9;color:#fff2cf}
+.message{font-size:19px;line-height:1.8;color:#ffe5b4}
+.signature{font-size:25px;color:#ffd66b;margin-top:25px}
+#music{position:fixed;top:12px;right:12px;z-index:5;font-size:13px;padding:10px 14px}
+.spark{position:fixed;pointer-events:none;color:#ffc76a;animation:float 6s linear infinite;opacity:0}
+@keyframes float{0%{transform:translateY(105vh);opacity:0}20%{opacity:.8}100%{transform:translateY(-15vh);opacity:0}}
+footer{margin-top:35px;color:#e3b878;font-size:13px}
+</style>
+</head>
+<body>
+<button id="music" onclick="toggleMusic()">♫ Music Off</button>
+<main>
+<div class="ornament">✦ ❈ ✦</div>
+<h1>Happy<br>Deepavali</h1>
+<p class="subtitle">A little light, a lot of love ✨</p>
+<span class="diya">🪔</span>
+<div id="intro">
+<p class="subtitle">A special wish is waiting for you...</p>
+<button onclick="openGreeting()">🪔 Light the Diya</button>
+</div>
+<div id="reveal">
+<p class="telugu" lang="te">
+మీకు మీ కుటుంబ సభ్యులందరికీ<br>
+దీపావళి శుభాకాంక్షలు!
+</p>
+<p class="message">
+May the divine light of Deepavali fill your home with happiness, your heart with peace, and your life with prosperity.
+</p>
+<p class="message">
+May every diya bring new hope, every smile bring warmth, and every moment bring beautiful memories.
+</p>
+<div class="ornament">✨ 🪔 ✨</div>
+<p class="signature">With Love,<br><strong>Kishore & Keerti ❤️</strong></p>
+</div>
+<footer>✨ Celebrating light, love & togetherness ✨</footer>
+</main>
+<script>
+let ctx,playing=false,timer,note=0;
+const melody=[
+392,440,494,587,494,440,392,330,
+392,440,523,659,587,523,440,392,
+330,392,440,523,494,440,392,330
+];
+function tone(freq){
+ if(!ctx)return;
+ const now=ctx.currentTime;
+ const osc=ctx.createOscillator();
+ const gain=ctx.createGain();
+ osc.type="sine";
+ osc.frequency.setValueAtTime(freq,now);
+ gain.gain.setValueAtTime(.0001,now);
+ gain.gain.exponentialRampToValueAtTime(.075,now+.04);
+ gain.gain.exponentialRampToValueAtTime(.0001,now+.38);
+ osc.connect(gain).connect(ctx.destination);
+ osc.start(now);osc.stop(now+.4);
+}
+function toggleMusic(){
+ if(playing){
+ clearInterval(timer);playing=false;
+ document.getElementById("music").textContent="♫ Music Off";
+ return;
+ }
+ const AudioContextClass=window.AudioContext||window.webkitAudioContext;
+ if(!AudioContextClass)return;
+ ctx=ctx||new AudioContextClass();
+ ctx.resume();
+ playing=true;
+ document.getElementById("music").textContent="♫ Music On";
+ tone(melody[note++%melody.length]);
+ timer=setInterval(()=>tone(melody[note++%melody.length]),420);
+}
+function openGreeting(){
+ document.getElementById("intro").style.display="none";
+ document.getElementById("reveal").style.display="block";
+ if(!playing)toggleMusic();
+ for(let i=0;i<35;i++)setTimeout(spark,i*90);
+}
+function spark(){
+ const s=document.createElement("span");
+ s.className="spark";
+ s.textContent=["✦","✧","✨","❋"][Math.floor(Math.random()*4)];
+ s.style.left=Math.random()*100+"vw";
+ s.style.fontSize=(12+Math.random()*20)+"px";
+ s.style.animationDuration=(3+Math.random()*4)+"s";
+ document.body.appendChild(s);
+ setTimeout(()=>s.remove(),7500);
+}
+setInterval(spark,450);
+</script>
+</body>
+</html>
